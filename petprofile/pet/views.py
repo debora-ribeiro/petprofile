@@ -25,3 +25,23 @@ def mostrarPets(request):
     lista_pets = Pet.objects.all()
     queryset_serializer = PetSerializer(lista_pets, many= True)
     return Response(queryset_serializer.data)
+
+@api_view(['PUT'])
+def atualizarPet(request, idd):
+    pet = Pet.objects.get(id= idd)
+    pet_serializado= PetSerializer(pet, data= request.data)
+    if pet_serializado.is_valid():
+        pet_serializado.save()
+        return Response(pet_serializado.data, status= status.HTTP_200_OK)
+    else:
+        return Response(status= status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def deletarPet(request, id):
+    pet= Pet.objects.get(id= id)
+    pet.delete()
+    return Response(status= status.HTTP_204_NO_CONTENT)
+
+
+
